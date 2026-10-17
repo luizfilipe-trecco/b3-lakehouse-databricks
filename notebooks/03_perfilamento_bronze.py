@@ -1,4 +1,8 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "6"
+# ///
 # MAGIC %md
 # MAGIC # 03 - Perfilamento (data profiling) da bronze
 # MAGIC Antes de limpar, **descubra** o que esta errado. Rode cada query e anote o que encontrou.

@@ -1,12 +1,16 @@
 # Databricks notebook source
-# MAGIC %md
-# MAGIC # 01 - Gerador de dados brutos (FICTICIOS) da B3
-# MAGIC Gera 3 tipos de arquivo **propositalmente sujos** no Volume `landing`:
-# MAGIC - `empresas_raw_d1.csv` (cadastro, separador `;`) - snapshot do dia 1
-# MAGIC - `empresas_raw_d2.csv` - snapshot do dia 2, com mudancas (para treinar SCD depois)
-# MAGIC - `cotacoes_raw_YYYYMM.csv` (separador `,`) - cotacoes diarias, 1 arquivo por mes
-# MAGIC
-# MAGIC Todos os dados sao inventados. Tickers e nomes nao representam empresas reais.
+# /// script
+# [tool.databricks.environment]
+# environment_version = "6"
+# ///
+/Volumes/workspace/bronze/landing/raw/cotacoes_raw_202608.csv/Volumes/workspace/bronze/landing/raw/cotacoes_raw_202607.csv%md
+# 01 - Gerador de dados brutos (FICTICIOS) da B3
+Gera 3 tipos de arquivo **propositalmente sujos** no Volume `landing`:
+- `empresas_raw_d1.csv` (cadastro, separador `;`) - snapshot do dia 1
+- `empresas_raw_d2.csv` - snapshot do dia 2, com mudancas (para treinar SCD depois)
+- `cotacoes_raw_YYYYMM.csv` (separador `,`) - cotacoes diarias, 1 arquivo por mes
+
+Todos os dados sao inventados. Tickers e nomes nao representam empresas reais.
 
 # COMMAND ----------
 
@@ -26,6 +30,7 @@ nrng = np.random.default_rng(SEED)
 N_EMPRESAS = 450
 
 # COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## 1. Base LIMPA (a "verdade") - ainda sem sujeira
 
@@ -100,6 +105,7 @@ base = gerar_base(N_EMPRESAS)
 print(base.shape)
 
 # COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## 2. Funcoes que SUJAM os dados
 
@@ -216,6 +222,7 @@ def sujar_empresas(df, seed):
     return d.sample(frac=1, random_state=seed).reset_index(drop=True)
 
 # COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## 3. Cadastro de empresas - snapshot D1 e D2 (D2 tem mudancas p/ treinar SCD)
 
@@ -256,6 +263,7 @@ gab.to_csv(f"{GABARITO_DIR}/gabarito_mudancas_d2.csv", index=False)
 print("empresas d1:", emp_d1.shape, "| d2:", emp_d2.shape, "| mudancas esperadas:", len(gab))
 
 # COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## 4. Cotacoes diarias (1 arquivo por mes) - com a chave `id_empresa` como STRING com zeros
 # MAGIC Proposital: no cadastro `id_empresa` e inteiro, aqui e texto `"000123"`. Treino de JOIN com tipos diferentes.

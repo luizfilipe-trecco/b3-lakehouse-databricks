@@ -1,4 +1,8 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "6"
+# ///
 # MAGIC %md
 # MAGIC # 02 - Camada BRONZE
 # MAGIC Regras da bronze: **nao corrigir nada**. Tudo como STRING, com metadados de rastreio.
@@ -52,6 +56,7 @@ ingest("cotacoes_raw_*.csv", ",", "cotacoes_raw")
 spark.table(f"{CATALOG}.bronze.empresas_raw").printSchema()
 
 # COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## FASE SCD (so depois de terminar silver/gold v1)
 # MAGIC Descomente e rode para "chegar o dia 2". Note que o `_source_file` diferencia os snapshots.

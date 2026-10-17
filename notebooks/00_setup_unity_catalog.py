@@ -1,4 +1,8 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "6"
+# ///
 # MAGIC %md
 # MAGIC # 00 - Setup do Unity Catalog
 # MAGIC Cria os schemas das camadas (bronze/silver/gold) e o Volume onde os arquivos brutos "pousam".
