@@ -128,10 +128,11 @@ notebooks/
 - Arquivos brutos em **Volume**, tabelas em **Delta**.
 - A linhagem (bronze → silver → gold) é registrada automaticamente pelo Unity Catalog, já que as transformações rodam dentro dele.
 
-<!-- Depois de subir os prints para docs/img/, remova os comentários abaixo:
+
+### Evidências do pipeline
+
 ![Tabelas no Catalog](docs/img/catalog_tabelas.png)
-![Linhagem de dados](docs/img/linhagem.png)
--->
+  
 
 ---
 
