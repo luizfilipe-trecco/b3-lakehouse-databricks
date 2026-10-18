@@ -132,7 +132,9 @@ notebooks/
 ### Evidências do pipeline
 
 ![Tabelas no Catalog](docs/img/catalog_tabelas.png)
-  
+![Linhagem de dados](docs/img/linhagem.png)
+
+![Validação das tabelas Gold](docs/img/validacao_gold.png) 
 
 ---
 
