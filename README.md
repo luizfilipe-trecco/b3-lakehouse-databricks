@@ -140,55 +140,59 @@ notebooks/
 
 ## Como executar
 
-Requer uma conta no **Databricks (Free Edition serve)** com compute serverless.
+O projeto foi desenvolvido no Databricks Free Edition, utilizando compute serverless e Unity Catalog.
 
-1. Crie um **Git folder** apontando para este repositório (Workspace → Create → Git folder).
-2. Confirme o nome do seu catálogo em *Catalog*. Os notebooks usam `workspace`; se o seu for outro, troque o nome.
-3. Execute na ordem:
-   `00_setup_unity_catalog` → `01_gerar_dados_brutos` → `02_bronze_ingestao` → `03_perfilamento_bronze` → `04_silver_empresas` → `04_silver_cotacoes` → `05_gold`
-4. A silver de cotações lê `silver.empresas` na validação de integridade, então a silver de empresas precisa rodar antes.
+Para reproduzir o pipeline, basta importar o repositório para um Git folder no Databricks e verificar o catálogo utilizado nos notebooks (`workspace`).
 
-Se uma célula falhar, use *Run all above* antes de repetir: as transformações do DataFrame são encadeadas e uma execução com erro deixa passos pela metade na sessão.
+A execução segue a ordem:
 
----
+1. `00_setup_unity_catalog` — criação dos schemas e do volume de armazenamento.
+2. `01_gerar_dados_brutos` — geração dos arquivos CSV.
+3. `02_bronze_ingestao` — ingestão dos dados na Bronze.
+4. `03_perfilamento_bronze` — análise inicial da qualidade dos dados.
+5. `04_silver_empresas` — tratamento dos dados cadastrais.
+6. `04_silver_cotacoes` — tratamento das cotações e validação de integridade.
+7. `05_gold` — construção das tabelas analíticas e indicadores.
+
+A ordem é importante porque existem dependências entre as camadas, especialmente na validação das cotações contra o cadastro de empresas.
 
 ## Limitações e próximos passos
 
-**Limitações conhecidas**
-- Os dados são fictícios, então os CNPJs não têm dígito verificador real: a validação checa apenas o tamanho.
-- A carga é **completa** (`overwrite`), e não incremental.
-- A idempotência da bronze é **por nome de arquivo**: um arquivo corrigido com o mesmo nome seria ignorado.
-- A fato aponta para a versão atual da dimensão, sem ligar cada cotação à versão vigente na data dela.
-- Os notebooks são executados manualmente, sem orquestração nem testes automatizados.
-- Não há SCD implementado na carga. A dimensão já tem chave substituta e colunas de histórico, e foram gerados um segundo snapshot do cadastro e um arquivo de gabarito para essa evolução.
+O projeto foi desenvolvido como um estudo prático de engenharia de dados, com foco na construção do pipeline, qualidade dos dados e modelagem analítica.
 
-**Próximos passos**
-- SCD tipo 2 em `setor` e `situacao` (e tipo 1 em razão social) com `MERGE`, usando o snapshot D2.
-- Ingestão incremental com Auto Loader ou `COPY INTO`.
-- Orquestração dos notebooks com Databricks Workflows (ou Airflow).
-- Testes de qualidade automatizados, com falha do pipeline quando uma regra for violada.
-- Particionamento ou *clustering* por data em volume maior.
+**Limitações atuais:**
 
----
+- Dados sintéticos, com validação simplificada de CNPJ.
+- Carga completa das tabelas, sem ingestão incremental.
+- Controle de idempotência na Bronze baseado no nome dos arquivos.
+- Dimensão de empresas sem histórico SCD implementado.
+- Execução manual dos notebooks, sem orquestração ou testes automatizados.
 
-## Como seria no Azure
+**Possíveis evoluções:**
 
-O projeto roda na Free Edition, que não se conecta ao Azure. Este é o desenho de como ele seria em produção (**não executado**):
+- Implementação de SCD tipo 2 para histórico de alterações cadastrais.
+- Ingestão incremental utilizando Auto Loader ou COPY INTO.
+- Orquestração com Databricks Workflows.
+- Automatização dos testes de qualidade e integridade.
+- Otimizações de armazenamento e processamento para volumes maiores.
 
-| Neste projeto | No Azure |
+## Possível arquitetura no Azure
+
+Embora o projeto tenha sido desenvolvido no Databricks Free Edition, a arquitetura pode ser adaptada para um ambiente Azure.
+
+| Componente atual | Equivalente no Azure |
 |---|---|
-| Volume `landing` | Contêiner em **ADLS Gen2** (storage account com namespace hierárquico) |
-| Gerador de dados | Fonte externa (API, banco, SFTP) |
-| Ingestão para a landing | **Azure Data Factory**, com *Copy Activity* |
-| Notebooks bronze, silver e gold | **Databricks Notebook Activity** dentro do pipeline do ADF |
-| Ordem de execução | Dependências entre atividades (sucesso → próxima) |
-| Agendamento | **Trigger** de agenda (por exemplo, diário às 02h) |
-| Unity Catalog | Igual, com *external locations* apontando para o ADLS |
-| Conexão ADF ↔ Databricks | *Linked service* com autenticação gerenciada |
+| Volume de arquivos brutos | Azure Data Lake Storage Gen2 |
+| Geração dos dados | Fontes externas, APIs ou bancos de dados |
+| Ingestão de arquivos | Azure Data Factory |
+| Processamento Bronze, Silver e Gold | Azure Databricks |
+| Execução sequencial dos notebooks | Pipelines do Azure Data Factory |
+| Governança e linhagem | Unity Catalog |
 
-Para um volume grande (por exemplo, 1 bilhão de linhas por dia): ingestão incremental, formato colunar (Parquet/Delta), partição por data, cópia paralela no ADF, compactação periódica (`OPTIMIZE`) e atenção a *small files* e *skew*.
+Nesse cenário, o Azure Data Factory seria responsável pela ingestão e orquestração, enquanto o Databricks realizaria as transformações e a construção das tabelas analíticas.
 
----
+Essa integração não foi implementada neste projeto, mas representa uma possibilidade de evolução para um ambiente de produção.
+
 
 ## Autor
 
