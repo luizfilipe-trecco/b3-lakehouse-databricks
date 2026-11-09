@@ -2,7 +2,7 @@
 
 Projeto de engenharia de dados que transforma dados brutos e "sujos" de empresas listadas na bolsa em tabelas confiáveis e prontas para análise, usando **arquitetura medalhão (Bronze → Silver → Gold)** no **Databricks** com **Unity Catalog**.
 
-> **Os dados são fictícios.** Tickers, nomes, CNPJs e cotações foram gerados por um script em Python (com apoio de IA), e não representam empresas reais. Os problemas de qualidade foram plantados de propósito e catalogados, o que permitiu validar cada tratamento contra um número esperado.
+> **Os dados são fictícios.** Tickers, nomes, CNPJs e cotações foram gerados por um script em Python (com apoio de IA), e não representam empresas reais. Os problemas de qualidade foram plantados de propósito.
 
 **Stack:** Python · PySpark · Spark SQL · Delta Lake · Unity Catalog (catálogos, schemas, volumes, linhagem) · Git/GitHub (branches e pull requests)
 
