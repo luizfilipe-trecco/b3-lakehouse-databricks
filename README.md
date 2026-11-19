@@ -193,6 +193,50 @@ Nesse cenário, o Azure Data Factory seria responsável pela ingestão e orquest
 
 Essa integração não foi implementada neste projeto, mas representa uma possibilidade de evolução para um ambiente de produção.
 
+## Agentes de IA e documentação técnica
+
+Este repositório foi estruturado para facilitar sua compreensão, manutenção e evolução por desenvolvedores e agentes de Inteligência Artificial.
+
+Além dos notebooks Databricks, o projeto disponibiliza documentação técnica em Markdown, instruções para agentes e seis **Agent Skills**, seguindo o padrão aberto Agent Skills.
+
+### Instruções para agentes
+
+- [`AGENTS.md`](AGENTS.md): mapa do projeto, convenções e regras para agentes de IA.
+- [`CLAUDE.md`](CLAUDE.md): ponto de entrada para ferramentas que utilizam essa convenção.
+- [Instruções do GitHub Copilot](.github/copilot-instructions.md): orientações específicas para o Copilot.
+
+### Documentação técnica
+
+A pasta [`docs/`](docs/INDEX.md) contém documentação sobre:
+
+- Arquitetura Medallion (Bronze, Silver e Gold).
+- Dicionário de dados e regras de transformação.
+- Qualidade dos dados e tratamento de registros inválidos.
+- Decisões técnicas e justificativas arquiteturais.
+- Procedimentos de execução e recuperação do pipeline.
+- Limitações atuais e roadmap de evolução.
+
+### Agent Skills
+
+Foram criadas seis Skills especializadas, disponíveis em [`skills/`](skills/):
+
+| Skill | Finalidade |
+|---|---|
+| `b3-lakehouse-navigation` | Navegar pelo repositório e compreender a arquitetura. |
+| `add-new-source` | Orientar a inclusão de novas fontes de dados. |
+| `silver-cleaning` | Padronizar procedimentos de limpeza e transformação na Silver. |
+| `gold-modeling` | Orientar a criação de dimensões, fatos e indicadores na Gold. |
+| `data-quality-checks` | Apoiar a criação e revisão de validações de qualidade. |
+| `run-and-reset-pipeline` | Orientar a execução e recuperação segura do pipeline. |
+
+As Skills fornecem procedimentos e instruções reutilizáveis. Sua utilização depende de um agente compatível e da configuração adequada de descoberta dos arquivos.
+
+### Validação com agentes
+
+O projeto também inclui um [guia de configuração e testes](docs/AGENTES_E_TESTES.md), com cenários para avaliar navegação, compreensão da arquitetura, qualidade dos dados e segurança operacional.
+
+**Status:** documentação e Skills adicionadas ao repositório. Os testes práticos de descoberta e utilização no Databricks ainda estão pendentes.
+
 
 ## Autor
 
